@@ -1,3 +1,3 @@
 (This code is currently in development)
 
-# ClimateSERV2.0
+# ClimateSERV-2.0-Server
