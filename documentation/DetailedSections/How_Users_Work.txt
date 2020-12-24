@@ -1,0 +1,62 @@
+
+This is a document to help explain how the user system works in ClimateSERV 2.0
+
+
+Super Users - Meant for Technical Super Admin
+    At the very top level, there are python django superusers.
+    SuperUsers have direct database access and are usually reserved for highly technical staff.
+
+    To create a super user, browse to the install directory on the server and run the following command.
+        python manage.py createsuperuser
+            // Then follow the instructions presented.
+        Reference:  https://docs.djangoproject.com/en/2.2/ref/django-admin/#createsuperuser
+
+    To log in as a Super User
+        Browse to this website address:  hosted_domain.com/cserv_system_admin/login/
+            // For local dev, the address may look like this: http://127.0.0.1:8234/cserv_system_admin/login/
+
+            Enter your superuser's Username and Password.  Then click "Log in"
+
+
+    Expected Usage:
+        When the need exists to create the first ClimateSERV 2.0 Admin User
+            (1) Log in with a super user.
+            (2) Browse to the data model which holds the user's permissions information.
+            (3) Make sure they are an Admin (Select the appropriate check box)
+            (4) Make sure they have the permission to Manage Other Users (Select the appropriate check box)
+                    Note: This flag means that this user can use the ClimateSERV 2.0 Admin Client app to set these same permissions for other system users.
+            (5) Save the changes.
+            A 'Be Careful' Note:
+                When editing Auth.User table directly, It is possible to assign superuser status to any user on ClimateSERV 2.0 system.
+                If you intend on setting an Admin user, Browse to the User Table under 'api_v2.User' and set the flags there.
+
+        In the event that there is any specific data in the system which is incorrect, or causes an error and needs to be modified or removed.
+            (1) Log in with a super user.
+            (2) Browse to the data model in question
+            (3) Browse to the specific data in question.
+            (4) Make the appropriate changes.
+
+CliamteSERV 2.0 Admin
+    At the application's top level, this is a user who can log in to the ClimateSERV 2.0 Admin Application.
+    When a user is created, it is also created as a python django user for session management and authentication purposes, but does not have any kind of super user or system level access.
+    This user is mirrored in the application table (api_v2.User).
+    The data contained in api_v2.User is what determines what permissions the user has.
+
+    At this time, there is a basic create user function inside the ClimateSERV 2.0 Admin page
+        This creates a user who is has the admin permission and should be able to view any of the admin content available on the interface.
+
+    What happens if a user forgets his/her password?
+        Have technical staff Create another Admin user and remove the existing one.
+
+    What happens if we need to disable a user temporarily
+        Have technical staff edit the 'is_admin' flag on that particular user.  Turning this flag off should prevent that user from being able to view / use the admin interface.  They can still log in but should see no content and have no controls.
+
+
+CliamteSERV 2.0 User - with a login
+    Same as a ClimateSERV 2.0 Admin except has NONE of the permission flags turned on.
+    There is currently no use case for this type.  This type only exists as a flexible consequence of the design.
+
+CliamteSERV 2.0 User - Guest / Public User
+    No login and can only use the public 'end user' parts of ClimateSERV 2.0.
+
+

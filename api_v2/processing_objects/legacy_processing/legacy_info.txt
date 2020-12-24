@@ -1,0 +1,4 @@
+Taking some of the contents of of 'servirchirpsdjango' directories from ClimateSERV 1.0 and starting from there.
+
+There may be complications that require updates when selecting from the new NC4 files instead of the HDF5s.
+

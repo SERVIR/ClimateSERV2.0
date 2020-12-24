@@ -1,0 +1,19 @@
+API Endpoint Logging
+
+List of Fields Logged and Indexed
+    -TODO - write out the model list here explanations
+
+List of Additional Fields that sometimes appear in the logs.
+    -TODO - write out the common 'additional json' sub properties list here with explanations
+
+Ignore List
+    Look in the django Settings for a variable named "API_LOGGING_ENDPOINT_IGNORE_LIST"
+    This variable is a list of strings.
+    If you want the endpoint to be ignored in the logs, add the endpoint as a string to this list.
+    Note: This is an exact match, so for best results, pick the endpoint you want to ignore from the logs, then copy and paste from the logs screen to the settings.
+    For Examples:
+        # Works - Blocks this endpoint
+            '/api_v2/get_server_versions/'
+        # These do not work
+            'api_v2/get_server_versions'
+            'get_server_versions'
