@@ -1314,6 +1314,7 @@ def submitDataRequest(request):
             dictionary['operationtype'] = str(operationtype).strip()
             dictionary['begintime'] = str(begintime).strip()
             dictionary['endtime'] = str(endtime).strip()
+            dictionary['geoInput_Type'] = str(geoInput_Type).strip()
             # Deprecated # dictionary['intervaltype'] = str(intervaltype).strip()
             #
             # Check the GeoInput type and add the correct values

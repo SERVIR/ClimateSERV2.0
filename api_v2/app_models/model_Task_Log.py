@@ -173,6 +173,7 @@ class Task_Log(models.Model):
         try:
             current_job = Task_Log.objects.filter(job_uuid=str(job_uuid))[0]
             current_job.is_errored = True
+            current_job.job_progress    =   int(-1)             # Legacy Support - When a job errored in ClimateSERV 1, the Errors showed a job progress of -1
             current_job.save()
         except:
             pass
