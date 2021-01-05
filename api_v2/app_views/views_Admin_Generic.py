@@ -27,6 +27,7 @@ from common_utils import views as common_views_utils
 #from django.contrib.auth import authenticate
 # 'APILog', 'AvailableGranule', 'ETLDataset', 'ETLGranule', 'ETLLog', 'ETLPipelineRun', 'User'
 from api_v2.app_models.model_API_Log            import API_Log
+from api_v2.app_models.model_Task_Log           import Task_Log
 from api_v2.app_models.model_Available_Granule  import Available_Granule
 from api_v2.app_models.model_ETL_Dataset        import ETL_Dataset
 from api_v2.app_models.model_ETL_Granule        import ETL_Granule
@@ -117,7 +118,7 @@ def admin_get_db_item(request):
         #print("DEBUG: (object_type) " + str(object_type))
 
         # The TYPES of objects that admin tool can retrieve by database id
-        ADMIN_GET_DB_OBJECT_TYPES = ['APILog', 'AvailableGranule', 'ETLDataset', 'ETLGranule', 'ETLLog', 'ETLPipelineRun', 'ServerLog', 'User', 'Task_Log']
+        ADMIN_GET_DB_OBJECT_TYPES = ['APILog', 'AvailableGranule', 'ETLDataset', 'ETLGranule', 'ETLLog', 'ETLPipelineRun', 'ServerLog', 'User', 'TaskLog']  #'Task_Log']
         if(object_type not in ADMIN_GET_DB_OBJECT_TYPES):
             is_Pass_Biz_Validation = False
             validation_error_message += "Object Type: " +str(object_type) + ", not found in list: " + str(ADMIN_GET_DB_OBJECT_TYPES) + "  The API won't let a type that is not recognized pass the validation.  The list of types are case sensitive.  "
@@ -172,6 +173,8 @@ def admin_get_db_item(request):
                     retObj = ETL_PipelineRun.objects.filter(uuid=object_uuid)[0].to_JSONable_Object()
                 if (object_type == 'User'):
                     retObj = api_v2__user.objects.filter(uuid=object_uuid)[0].to_JSONable_Object()
+                if (object_type == 'TaskLog'):
+                    retObj = Task_Log.objects.filter(uuid=object_uuid)[0].to_JSONable_Object()
 
                 # Get the success response data
                 response_data = common_views_utils.get_Success_Response_JSON(original_request_data={})
@@ -398,6 +401,148 @@ def admin_get_api_logs(request):
     return JsonResponse(response_data)
 
 
+
+
+#url(r'admin_get_task_logs/',  views_Admin_Generic.admin_get_task_logs,  name='admin_get_task_logs'),            # # /api_v2/admin_get_task_logs  //
+#
+# admin_get_task_logs
+# # /api_v2/admin_get_task_logs  //
+# url(r'admin_get_task_logs/',  views_Admin_Generic.admin_get_task_logs,  name='admin_get_task_logs'),               # # /api_v2/admin_get_task_logs  //
+@csrf_exempt  # POST REQUESTS ONLY
+def admin_get_task_logs(request):
+    response_data = {}
+    api_function_name = "admin_get_task_logs"
+    api_function_code = "A2AGTL"
+    additional_request_data_py_obj = {}
+    try:
+        # Gather filtered request here.
+        filteredRequest = common_views_utils.filter_And_Validate_Request(request=request)
+        theData_PyObj = common_views_utils.extract_raw_httpbody_POST_Request_To_PyObj(postRequest=filteredRequest)
+
+        # Report Incoming API Request
+        additional_request_data_py_obj['raw_httpbody_POST_params'] = theData_PyObj
+        # views.report_API_Call_Event(api_function_name=api_function_name, api_function_code=api_function_code, additional_request_data_py_obj=additional_request_data_py_obj)
+
+        # Process Input Params
+        paramsInfo = {}
+        paramsInfo['items'] = [
+            {'inputKey_Str': 'session_info', 'inputType_ClassName': 'str', 'isParamOptional': 'False', 'isValidate_ForNotEmpty': 'True', 'isValidate_JSONLoadsObj': 'False', 'defaultReturnValue': ''},
+
+            {'inputKey_Str': 'page_number', 'inputType_ClassName': 'int', 'isParamOptional': 'False', 'isValidate_ForNotEmpty': 'True', 'isValidate_JSONLoadsObj': 'False', 'defaultReturnValue': 0},
+
+            {'inputKey_Str': 'items_per_page', 'inputType_ClassName': 'int', 'isParamOptional': 'False', 'isValidate_ForNotEmpty': 'True', 'isValidate_JSONLoadsObj': 'False', 'defaultReturnValue': 50},
+
+           # {'inputKey_Str': 'object_type', 'inputType_ClassName': 'str', 'isParamOptional': 'False', 'isValidate_ForNotEmpty': 'True', 'isValidate_JSONLoadsObj': 'False', 'defaultReturnValue': ''},
+
+        ]
+
+        # Validate Input Params
+        processed_RequestParams = {}
+        isValidationError = False
+        validationErrorMessages = ""
+        validationSysErrorData = ""
+        processed_RequestParams, isValidationError, validationErrorMessages, validationSysErrorData = common_views_utils.validate_extract_process_requestParams(requestData_PyObj=theData_PyObj, paramsInfo=paramsInfo)
+
+        # Return if Validation Error
+        if (isValidationError == True):
+            response_data = common_views_utils.get_Error_Response_JSON(errorMessage="Validation Error Occurred: " + str(validationErrorMessages), errorCode=api_function_code, errorData=validationSysErrorData)
+
+            # Log the API Call
+            additional_request_data_py_obj['errorMessage'] = "Validation Error Occurred: " + str(validationErrorMessages)
+            additional_request_data_py_obj['errorData'] = str(validationSysErrorData).strip()
+            new_API_Log_UUID = views.report_API_Call_Event(request_obj=request, api_function_name=api_function_name, api_function_code=api_function_code, additional_request_data_py_obj=additional_request_data_py_obj, server_response_json=response_data)
+            return JsonResponse(response_data)
+
+        # API Function Biz Logic here
+        is_Pass_Biz_Validation = True
+        validation_error_message = ""
+
+        session_info = processed_RequestParams['session_info']
+        page_number = processed_RequestParams['page_number']
+        items_per_page = processed_RequestParams['items_per_page']
+
+        current_user__has_permissions = False
+        try:
+            current_user__is_admin = views.is_this_an_admin_user(session_info=session_info)
+            if (current_user__is_admin == True):
+                current_user__has_permissions = True
+        except:
+            # print("We hit the except block.. Lets find out what went wrong..")
+            pass
+        if (current_user__has_permissions == False):
+            is_Pass_Biz_Validation = False
+            validation_error_message += "You do not have permission to get database objects.  "
+
+        # Catch Biz Validation errors and return to user here
+        if (is_Pass_Biz_Validation == False):
+            human_readable_error = validation_error_message
+            response_data = common_views_utils.get_Error_Response_JSON(errorMessage=human_readable_error, errorCode=api_function_code, errorData="")
+            response_data['validation_error_message'] = str(validation_error_message).strip()
+        else:
+            # Did Passed Biz Validation - Grab the requested object
+            try:
+                retList = []
+
+                # Setup the filter params
+                qFilter_Params = {}
+                # if (endpoint_name != ''):
+                #     qFilter_Params['endpoint'] = endpoint_name
+
+                # TODO - Task Log Custom Query Filter
+
+
+                #print("admin_get_task_logs: TODO - add Custom Params (For Custom Filtering - Example: Return only 'errors', etc")
+                # TODO - add Custom Params (For Custom Filtering - Example: Return only 'errors', etc
+
+                #db_objects = ETL_Log.objects.filter(**qFilter_Params).order_by('-created_at')[(items_per_page * page_number):(items_per_page * page_number) + items_per_page] #.all()
+                db_objects = Task_Log.objects.filter(**qFilter_Params).order_by('-created_at')[(items_per_page * page_number):(items_per_page * page_number) + items_per_page]  # .all()
+                for db_object in db_objects:
+                    retList.append(db_object.to_JSONable_Object())
+
+                # Get the total objects count for this query.
+                #total_db_objects_count_for_query = ETL_Log.objects.filter(**qFilter_Params).count()
+                total_db_objects_count_for_query = Task_Log.objects.filter(**qFilter_Params).count()
+
+                # Get the success response data
+                response_data = common_views_utils.get_Success_Response_JSON(original_request_data={})
+                response_data['PLACEHOLDER'] = str("TODO_FINISH_THIS_FUNCTION_ON_THE_SERVER").strip()
+                response_data['items_per_page'] = str(items_per_page).strip()
+                response_data['page_number'] = str(page_number).strip()
+                response_data['objects_type'] = str("Task_Log").strip()  # ETL_Log
+                response_data['objects_count'] = str(len(retList)).strip()
+                response_data['objects_list'] = retList
+                response_data['total_db_objects_count_for_query'] = total_db_objects_count_for_query # str(len(total_db_objects_count_for_query)).strip()  # how many total objects exist in the database for this query.
+            except:
+                # Uncaught Generic Error - Prep the response
+                sys_error_info = sys.exc_info()
+                human_readable_error = "An Error Occurred when trying to get a list of Task Logs from the database."
+                response_data = common_views_utils.get_Error_Response_JSON(errorMessage=human_readable_error, errorCode=api_function_code, errorData=sys_error_info)
+
+                # Report the API Error to the server for tracking and feedback
+                # additional_request_data_py_obj['extra_information'] = "none"
+                # views.report_API_Error(api_function_name=api_function_name, api_function_code=api_function_code, human_readable_error=human_readable_error, sys_error_info=sys_error_info, additional_request_data_py_obj=additional_request_data_py_obj)
+                additional_request_data_py_obj['errorMessage'] = str(human_readable_error).strip()
+                additional_request_data_py_obj['errorData'] = str(sys_error_info).strip()
+
+
+
+
+    except:
+        # Uncaught Generic Error - Prep the response
+        sys_error_info = sys.exc_info()
+        human_readable_error = "An Unknown Error Occurred.  Please try again shortly"
+        response_data = common_views_utils.get_Error_Response_JSON(errorMessage=human_readable_error, errorCode=api_function_code, errorData=sys_error_info)
+
+        # Report the API Error to the server for tracking and feedback
+        # additional_request_data_py_obj['extra_information'] = "none"
+        additional_request_data_py_obj['errorMessage'] = str(human_readable_error).strip()
+        additional_request_data_py_obj['errorData'] = str(sys_error_info).strip()
+
+    # Return the Response
+    response_data_COPY = dict(response_data)
+    response_data_COPY['objects_list'] = ["Objects_Removed_For_Logging"]
+    new_API_Log_UUID = views.report_API_Call_Event(request_obj=request, api_function_name=api_function_name, api_function_code=api_function_code, additional_request_data_py_obj=additional_request_data_py_obj, server_response_json=response_data_COPY)
+    return JsonResponse(response_data)
 
 
 # admin_get_etl_logs

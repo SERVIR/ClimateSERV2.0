@@ -57,6 +57,7 @@ url(r'admin_get_db_item/',  views_Admin_Generic.admin_get_db_item,  name='admin_
 # List Types - Support paging and Custom Param Sorting
 # # /api_v2/admin_get_api_logs  //
 url(r'admin_get_api_logs/',  views_Admin_Generic.admin_get_api_logs,  name='admin_get_api_logs'),               # # /api_v2/admin_get_api_logs  //
+url(r'admin_get_task_logs/',  views_Admin_Generic.admin_get_task_logs,  name='admin_get_task_logs'),            # # /api_v2/admin_get_task_logs  //
 url(r'admin_get_etl_logs/',  views_Admin_Generic.admin_get_etl_logs,  name='admin_get_etl_logs'),               # # /api_v2/admin_get_etl_logs  //
 url(r'admin_get_server_logs/',  views_Admin_Generic.admin_get_server_logs,  name='admin_get_server_logs'),      # # /api_v2/admin_get_server_logs  //
 
