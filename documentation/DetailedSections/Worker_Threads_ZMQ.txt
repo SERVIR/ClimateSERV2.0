@@ -1,94 +1,37 @@
-This is a doc that shows how to start the workers threads which are responsible for recieving and processing jobs in an Async way.
+This is a doc that shows how to start the workers threads which are responsible for receiving and processing jobs in an Async way.
 
 This also explains some additional context and differences between ClimateSERV 1.0 and ClimateSERV 2.0.
 
 
 
+In ClimateSERV 1.0,
+    ZMQ was used for messages between the API Layer and the Job Processors (Worker Threads)
+    Berkely DB was used for job data and progress communication.
+
+In ClimateSERV 2.0,
+    The worker system has been completely rebuilt to use a local database for that same communication.
+        -This includes fully integrating the start/stop commands with python django 'manage.py' commands
+        -This also includes rewriting all the ZMQ and Berkely stuff to instead work with the newly created Task_Log
+        -This also includes a new Core Processing part that works with NetCDF instead of old HDF files that ClimateSERV 1 used.
+
+    Some information on how to interface with the new system
+
+        -The Start and Stop Worker commands are now integrated with python django.
+            To Start a new worker run terminal command:
+                python3 manage.py start_worker
+                There is a helper shell script setup for this called, workers_start_one.sh
+            To Stop a single worker run terminal command:
+                python3 manage.py stop_worker_by_uuid                   # Example with uuid param:      python manage.py stop_worker_by_uuid -uuid xJjKYymAt3zBQcphXViV
+            To Stop ALL workers run terminal command:
+                python3 manage.py stop_all_workers
+
+        -To make the workers run in the unix background, I've set up cron jobs that first stop all workers, then wait 5 minutes, then start up 3 separate workers, 1 minute apart.  This cron is configured to be called once per year
+            Depending on how the system performs under real usage, it would probably be better to cycle these workers more often, maybe once per week.
+            That can be achieved by configuring the crontab for this.
 
 
-Functionality
-    -Messages are sent from the API layer to the message queue.  This mechanism has not changed, only the directory paths for the messages changed.
-    -Reading and Writing to the Message Queue, this has also not changed.
-    -Reading data from HDF5 files.
-        -In the old version, the workers all read from HDF5 files.
-        -In the new version, the workers all read from NETCDF4 files.
-    -Additional Tracking
-        -Additional Tracking has been added to keep track of each job and any errors associated with them.
+        -Life Cycle of a Server Job
+            -Submit Data Request API Calls create new Jobs to process
+            -Workers run on an endless loop checking for new Jobs to process
+            -When Job processing is successfully completed, there should always be a .json file which contains operation calculation results.  For Download Data Requests, there will be an additional .zip file created.
 
-
-
-
-
-
-
-
-Directories
-    The old Version used directory pattern: /tmp/servir/${HEADNAME} q1in
-    The new Version uses directory pattern: /tmp/cserv2_0/${HEADNAME} q1in
-
-    Every Example of the changes
-        runWorkers.sh
-
-            // Root Directory where Worker Code is located
-            #CSERV_1.0
-            # rootdir=/data/data/cserv/pythonCode/servirchirpsdjango #/data/data/cserv/pythonCode/serviringest
-            #CSERV_2.0 - Prod
-            # rootdir=/data/data/cserv/pythonCode/servirchirpsdjango #/data/data/cserv/pythonCode/serviringest
-            #CSERV_2.0 - Dev
-            rootdir=/Users/ks/ALL/CrisSquared/SoftwareProjects/SERVIR_2020/git_repos/ClimateSERV-2.0-Server/api_v2/processing_objects/zmq
-
-
-            // Location where zmq reads and writes to queues
-            #CSERV_1.0
-            # BASEIPCDIR="ipc:///tmp/servir/"
-            #CSERV_2.0 - Prod
-            # BASEIPCDIR="ipc:///tmp/servir/"
-            #CSERV_2.0 - Dev
-            BASEIPCDIR="ipc:///tmp/cserv2_0/"
-
-
-            // Location where the name of the process IDs are located
-            #CSERV_1.0
-            #PIDNAME=/tmp/servir/pid
-            #CSERV_2.0 - Prod
-            #PIDNAME=/tmp/cserv2_0/pid
-            #CSERV_2.0 - Dev
-            PIDNAME=/tmp/cserv2_0/pid
-
-
-
-Other Info
-
-    Start Workers:
-        sh api_v2/processing_objects/zmq/runWorkers.sh start
-    Stop Workers:
-        sh api_v2/processing_objects/zmq/runWorkers.sh stop
-
-
-
-    runWorkers.sh
-        // This is where the actual locations on the harddisk are created for the queues.
-            // CSERV 1.0
-                python CHIRPS/utils/file/fileutils.py /tmp/servir/Q1 input
-                python CHIRPS/utils/file/fileutils.py /tmp/servir/Q1 output
-
-            // CSERV 2.0
-                python legacy/fileutils.py /tmp/cserv2_0/Q1 input
-                python legacy/fileutils.py /tmp/cserv2_0/Q1 output
-
-
-
-
-    // ALL of the Berkely Database stuff needs to now be re-written to input into the new django database.
-
-
-
-
-// OLD NOTES
-OLD:        rootdir=/data/data/cserv/pythonCode/servirchirpsdjango
-NEW:        rootdir=/data/data/cserv/pythonCode/servirchirpsdjango
-NEW: DEV    rootdir=/Users/ks/ALL/CrisSquared/SoftwareProjects/SERVIR_2020/git_repos/ClimateSERV-2.0-Server
-
-OLD:        BASEIPCDIR="ipc:///tmp/servir/"
-NEW:        BASEIPCDIR="ipc:///tmp/cserv2_0/"
-NEW: DEV    BASEIPCDIR="ipc:///tmp/cserv2_0/"

@@ -41,7 +41,7 @@ Supported Subtypes
     At the time of this writing, the output from the above is:
         ETL Dataset Subtypes: ['chrip', 'chrips', 'chrips_gefs', 'emodis', 'esi_4week', 'esi_12week', 'imerg_early', 'imerg_late']
 
-    IMPORTANT TODO: After finishing the ETL Pipeline, go back and double check that the above list IS the complete list of supported subtypes - with no extra, unused ones (may consolidate some of them).
+
 
 
 

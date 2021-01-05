@@ -27,7 +27,8 @@ END_YEAR=$CURRENT_YEAR
 END_MONTH=$CURRENT_MONTH
 
 # check for condition of equal to 1
-if [[ "$CURRENT_MONTH" == 1 ]]; then
+#if [[ "$CURRENT_MONTH" == 1 ]]; then
+if [[ "$CURRENT_MONTH" == "01" ]]; then
 echo "The Current Month is 1 (Jan), so the previous month needs to be set to 12"
 PREVIOUS_MONTH=12
 START_YEAR=$PREVIOUS_YEAR

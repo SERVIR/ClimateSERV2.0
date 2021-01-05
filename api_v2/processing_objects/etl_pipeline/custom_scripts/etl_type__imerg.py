@@ -800,7 +800,7 @@ class imerg():
 
                         # Counting Granule downloads, not individual files (in this case, 1 granule is made up from two files)
                         download_counter = download_counter + 1
-                        print("At the end, no errors....  maybe... download_counter: " + str(download_counter))
+                        #print("At the end, no errors....  maybe... download_counter: " + str(download_counter))
 
                     except:
                         #print("There was some kind of error when trying to download IMERG Files (Tif and/or Tfw files).  TODO - Add the Granule Error here.")
