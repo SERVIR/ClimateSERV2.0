@@ -850,10 +850,7 @@ def admin_get_stats_for_type(request):
     api_function_code = "A2AGSFT"
     additional_request_data_py_obj = {}
     try:
-        print("admin_get_stats_for_type: TODO - WRITE THIS FUNCTION - THIS IS FOR ALL THE TYPES - IT IS ALSO DEPENDENT ON MODEL FUNCTIONS - EACH MODEL NEEDS IT'S OWN STATS FUNCTIONS")
-        print("admin_get_stats_for_type: TODO - WRITE THIS FUNCTION - THIS IS FOR ALL THE TYPES - IT IS ALSO DEPENDENT ON MODEL FUNCTIONS - EACH MODEL NEEDS IT'S OWN STATS FUNCTIONS")
-        print("admin_get_stats_for_type: TODO - WRITE THIS FUNCTION - THIS IS FOR ALL THE TYPES - IT IS ALSO DEPENDENT ON MODEL FUNCTIONS - EACH MODEL NEEDS IT'S OWN STATS FUNCTIONS")
-        print("admin_get_stats_for_type: TODO - WRITE THIS FUNCTION - THIS IS FOR ALL THE TYPES - IT IS ALSO DEPENDENT ON MODEL FUNCTIONS - EACH MODEL NEEDS IT'S OWN STATS FUNCTIONS")
+        # Note: This is part of the 'admin_get_dashboard_data' function (Most of the models have their own 'get_stats' functions.
         pass
     except:
         pass
@@ -956,6 +953,7 @@ def admin_get_dashboard_data(request):
 
                 dashboard_data['API_Log'] = API_Log.get_stats(earliest_datetime=earliest_datetime)
                 dashboard_data['ETL_Log'] = ETL_Log.get_stats(earliest_datetime=earliest_datetime)
+                dashboard_data['Task_Log'] = Task_Log.get_stats(earliest_datetime=earliest_datetime)
                 dashboard_data['ETL_Granule'] = "TODO Add get_stats() function to ETL Granule"
                 dashboard_data['Server_Log'] = "TODO Add get_stats() function to Server Log"
 

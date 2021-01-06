@@ -65,7 +65,8 @@ CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',  # React Admin App
     'http://climateserv.servirglobal.net',
     'http://216.218.226.161',
-    'https://climateserv.servirglobal.net'
+    'https://climateserv.servirglobal.net',
+    'https://climateserv2-beta-admin.servirglobal.net'
 ]
 
 

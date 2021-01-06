@@ -1,6 +1,7 @@
 # model_Task_Log.py
 
 from django.db import models
+from django.db.models import Count
 from common_utils import utils as common_utils
 import json
 import os
@@ -318,6 +319,39 @@ class Task_Log(models.Model):
 
         return operation_enum
 
+    # The returned keys are: 'field_name' and 'count'
+    @staticmethod
+    def get_distinct_count_list_for_field(field_name, earliest_datetime):
+        ret__List = []
+        try:
+            distinct_objects_with_count = Task_Log.objects.all().filter(created_at__gte=earliest_datetime).values(field_name).annotate(count=Count(field_name)).order_by('-count')
+            # distinct_objects_with_count = ETL_Log.objects.all().values(field_name).annotate(count=Count(field_name)).order_by('-count')  # No filters
+            # distinct_objects = API_Log.objects.values(field_name).distinct()
+            for distinct_object in distinct_objects_with_count:
+                current_obj = {}
+                current_obj[field_name] = str(distinct_object[field_name]).strip()
+                current_obj['count'] = str(distinct_object['count']).strip()
+                ret__List.append(current_obj)
+        except:
+            # Error Getting distinct objects.
+            pass
+        return ret__List
+
+    @staticmethod
+    def get_stats(earliest_datetime):
+        ret_obj = {}
+
+        field_list = ['ip_address', 'job_uuid', 'is_errored', 'job_status', 'job_progress']
+        ret_obj['stats_by_field'] = {}  # A container for all the stats
+        for field in field_list:
+            ret_obj['stats_by_field'][field] = {}
+            ret_obj['stats_by_field'][field]['distinct_counts'] = Task_Log.get_distinct_count_list_for_field(field_name=field, earliest_datetime=earliest_datetime)
+            # counts_for_field = API_Log.get_distinct_count_list_for_field(field)
+
+        ret_obj['total_db_objects'] = Task_Log.objects.count()
+
+        ret_obj['field_list'] = field_list
+        return ret_obj
 
 # MAKE MIGRATIONS
 #--Migrations
