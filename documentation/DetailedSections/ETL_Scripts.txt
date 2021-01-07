@@ -1,0 +1,81 @@
+ETL Scripts
+
+Here are the examples of how to use terminal commands to call the ETL Scripts via ETL Pipeline and how to use them broken down by product.
+
+# Get the List of UUIDs to Dataset names
+    Note: The UUIDs below may be different on the production server.
+    # Example
+        python manage.py list_etl_dataset_uuids
+            # output
+                UUID,    Dataset Name
+                fRjduT9v4jHyazGBMEJe,    CSERV-TEST_PIPELINE_DATASET
+                aZ9wbLzbE7efN2NSSAXn,    imerg_early_global_0_1deg_30min
+                uGG9pqNfU4nk7FGZJpGj,    imerg_late_global_0_1deg_30min
+                VGKnMtixyuqPxNYwpfqS,    emodis_ndvi_eastafrica_250m_10dy
+                gBDss8A4QZe9qvMWwEKe,    emodis_ndvi_westafrica_250m_10dy
+                bgzr2u8fRBSpQrDMDhgU,    emodis_ndvi_southernafrica_250m_10dy
+                qYBSXfcgBYiTAkMFAwuC,    emodis_ndvi_centralasia_250m_10dy
+                xnxTq8BwKiTuWW58KicU,    esi_global_0_05deg_4wk
+                GPY2FERp3K7vmRKK6CAp,    esi_global_0_05deg_12wk
+
+
+
+
+
+# IMERG
+    # Early
+        // This line would call the IMERG Early ETL for the time range of: Dec 30th, 2019 starting at the 46th 30 minute increment on the start day  TO  Jan 2nd, 2020 ending on the 3rd 30 minute increment on the end day
+        // 2 files on Dec 30th, 48 files on Dec 31st, 48 files on Jan 1st, 3 files on Jan 2nd
+        python manage.py start_etl_pipeline --etl_dataset_uuid aZ9wbLzbE7efN2NSSAXn --START_YEAR_YYYY 2019 --START_MONTH_MM 12  --START_DAY_DD 30 --START_30MININCREMENT_NN 46 --END_YEAR_YYYY 2020 --END_MONTH_MM 01  --END_DAY_DD 02 --END_30MININCREMENT_NN 03
+
+
+    # Late
+        // This line would call the IMERG Late ETL for the time range within a single day, Feb, 17th, 2020 for only the files between the 5th and 10th, 30 minute increments.  (Files for times 02:30, 03:00, 03:30, 04:00, 04:30) (5 30-min imerg Late files total)
+        python manage.py start_etl_pipeline --etl_dataset_uuid uGG9pqNfU4nk7FGZJpGj --START_YEAR_YYYY 2020 --START_MONTH_MM 02  --START_DAY_DD 17 --START_30MININCREMENT_NN 05 --END_YEAR_YYYY 2020 --END_MONTH_MM 02  --END_DAY_DD 17 --END_30MININCREMENT_NN 10
+
+
+# EMODIS
+    # East Africa
+        // This line would call the EMODIS East Africa ETL for the months of Dec 2019 and Jan 2020 (all 3 10day files for each month would be downloaded, 6 files total)
+        python manage.py start_etl_pipeline --etl_dataset_uuid VGKnMtixyuqPxNYwpfqS --START_YEAR_YYYY 2019 --START_MONTH_MM 12 --END_YEAR_YYYY 2020 --END_MONTH_MM 01 --REGION_CODE ea
+
+    # West Africa
+        // This line would call the EMODIS West Africa ETL for the single month of Jan 2020 (all 3 10day files for Jan would be downloaded, 3 files total)
+        python manage.py start_etl_pipeline --etl_dataset_uuid gBDss8A4QZe9qvMWwEKe --START_YEAR_YYYY 2020 --START_MONTH_MM 01 --END_YEAR_YYYY 2020 --END_MONTH_MM 01 --REGION_CODE wa
+
+    # Southern Africa
+        // This line would call the EMODIS Southern Africa ETL for the 3 month range of Oct 2019 to Dec 2019 (all 3 10day files for each month would be downloaded, 9 files total)
+        python manage.py start_etl_pipeline --etl_dataset_uuid bgzr2u8fRBSpQrDMDhgU --START_YEAR_YYYY 2019 --START_MONTH_MM 10 --END_YEAR_YYYY 2019 --END_MONTH_MM 12 --REGION_CODE sa
+
+    # Central Asia
+        // This line would call the EMODIS Central Asia ETL for the 3 month range of Nov 2019 to Jan 2020 (all 3 10day files for each month would be downloaded, 9 files total)
+        python manage.py start_etl_pipeline --etl_dataset_uuid qYBSXfcgBYiTAkMFAwuC --START_YEAR_YYYY 2019 --START_MONTH_MM 11 --END_YEAR_YYYY 2020 --END_MONTH_MM 01 --REGION_CODE cta
+
+
+# ESI
+    # Parameter: WEEKLY_JULIAN_START_OFFSET
+        // This is the paramater which tells the script which Julian date was the FIRST date of the year which started the weekly counts
+        // Weekly Julian Offset (for ESI, number from 0 to 6 -- 0 means, use Jan 1st, 6 means, use Jan 7th as first Julian Date)
+
+    # 4 Week
+        // Get All ESI 4week files from Jan 1st, 2020 to End of September, 2020, with a Weekly Julian offset of 0 (Meaning the First file was released on Jan 1st and all file dates are calculated on relative 7 day increments after the first date)
+        python manage.py start_etl_pipeline --etl_dataset_uuid xnxTq8BwKiTuWW58KicU --START_YEAR_YYYY 2020 --START_MONTH_MM 01 --END_YEAR_YYYY 2020 --END_MONTH_MM 09 --WEEKLY_JULIAN_START_OFFSET 0
+
+    # 12 Week
+        // Get All ESI 12week files from Jan 1st, 2020 to End of September, 2020, with a Weekly Julian offset of 1 (Meaning the First file was released on Jan 2nd and all file dates are calculated on relative 7 day increments after the first date)
+        python manage.py start_etl_pipeline --etl_dataset_uuid GPY2FERp3K7vmRKK6CAp --START_YEAR_YYYY 2020 --START_MONTH_MM 01 --END_YEAR_YYYY 2020 --END_MONTH_MM 09 --WEEKLY_JULIAN_START_OFFSET 1
+
+
+# CHIRPS
+    # chirp_global_0_05deg_1dy
+	    python manage.py start_etl_pipeline --etl_dataset_uuid Q3ky2Ud55wuWdu2f3BGc --START_YEAR_YYYY 2020 --START_MONTH_MM 10 --START_DAY_DD 29 --END_YEAR_YYYY 2020 --END_MONTH_MM 11 --END_DAY_DD 02
+
+	# chirps_global_0_05deg_1dy
+		python manage.py start_etl_pipeline --etl_dataset_uuid J2dbgY5Mb7cf6c7CJ5x8 --START_YEAR_YYYY 2020 --START_MONTH_MM 10 --START_DAY_DD 29 --END_YEAR_YYYY 2020 --END_MONTH_MM 11 --END_DAY_DD 02
+
+	# chirpsgef_global_0_05deg_1dy
+	    python manage.py start_etl_pipeline --etl_dataset_uuid LkBbC6nYc5yhFumuLHyq --START_YEAR_YYYY 2020 --START_MONTH_MM 10 --START_DAY_DD 29 --END_YEAR_YYYY 2020 --END_MONTH_MM 11 --END_DAY_DD 02
+
+
+
+

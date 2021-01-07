@@ -1,0 +1,310 @@
+
+release_notes.txt
+
+release_notes.txt // Added Release Notes File.
+
+
+# ######### TEMPLATE #########
+#
+# Version 0.1.8.A
+-api_v2 Changes
+--
+-Other Django Project or Module Changes (Settings etc)
+--
+-System Changes
+--
+#
+# ######### TEMPLATE #########
+
+
+
+
+
+# Version 0.1.8.A
+-api_v2 Changes
+--
+---TODO - Then do ALL the rest of the scripts -- TEST THESE - Do they dump Netcdf4 files where they should go -- Do they meet all the requirements?
+-Other Django Project or Module Changes (Settings etc)
+--
+-System Changes
+--
+
+
+
+
+
+# Version 0.1.7.A
+-api_v2 Changes
+--
+---
+-Other Django Project or Module Changes (Settings etc)
+--
+-System Changes
+--
+
+
+
+# \ THE LINE OF WHAT IS ALREADY PUSHED TO COMMIT --- ALL ITEMS ABOVE ARE NOT PUSHED TO COMMIT  /
+# / THE LINE OF WHAT IS ALREADY PUSHED TO COMMIT --- ALL ITEMS BELOW ARE PUSHED TO COMMIT      \
+
+
+
+# WIP Commit
+(WIP)
+ETL Overhaul
+	This commit covers multiple work sessions
+	(1)
+	--Progress on imerg ETL (both early and late)
+	--Found and fixed a time based bug in the emodis ETL
+	(2)
+	-Finished and tested (locally) ETLs for Imerg Early and Imerg Late
+	-Added the 'Datasets' Database objects for all 4 emodis, and both imerg (early and late) products
+		-These 'dataset' objects also include full TDS naming parameters as specified in the docs.
+	-Connected up the pipeline so it can work dynamically (by reading dataset and input params for each special type)
+		-This means that we now have highly granular control over which files each ETL product accesses (imerg down to the 30 min file, emodis down to the 1 month / 3 dekad)
+		-Includes adding input params for the pipeline start command and piping those input params to where they need to be set for each ETL Script Call
+	-Tested all of the termainl Scripts for calling emodis and imerg etl scripts under various granular time input settings
+	(3)
+	-Progress on CHIRP(s) type ETLs
+	-Progress on both ESI type ETLs
+	--Added all the settings for ESI Subtypes (Config Settings stored in the database - Added and Tested)
+	--Added Julian Offset param to the ETL pipeline which feeds into the ESI script.  This let's us work with both, the existing and new file naming, of the Julian Dates by tweaking this parameter.
+	-Created Terminal commands, documentation and testing example ESI ETLs
+
+Serverside API
+	--Created new data model for Configuration Settings
+	--Added all the code to manage getting/setting these, including dealing with datatypes like lists and dictionaries
+	--Ported all the existing custom django settings to this table (not counting the ones that normally come with django, only the custom ones added for this project)
+	--Moved all existing Usages of these settings to pull from the database (and not the existing settings record)
+(WIP)
+
+
+
+
+# Version 0.1.6.A
+-api_v2 Changes
+--ETL Overhaul
+----Cleaned up Emodis code,
+----pulled hardcoded stuff out into settings
+----Added the Available Granule Create or Update function
+----Added the code where an Available Granule is created or updated after a successful ingest.
+--API serverside code
+---API Logs
+----New Datamodel, API Log - For storing all API Log Requests
+----Built function for sending API Logs to the database as they come in.
+----API Logs are created just before any kind of server side response - this way the result of the request is also stored (including info on if the request succeeded or failed)
+----Established simple pattern for complete utilization of these API Logs
+----Added code for processing the API Logs Endpoint Ignore List - If an endpoint appears in the ignore list, the event will not be logged.
+-
+--Added some work to the AvailableGranule Datamodel and ran migrations
+-Other Django Project or Module Changes (Settings etc)
+--Added settings for emodis
+--Added settings for an API Logs Endpoint Ignore list
+-System Changes
+--Migrations
+---Modified Available Granule Data Model
+----api_v2/migrations/0007_available_granule_granule_name.py
+-----Add field granule_name to available_granule
+----Running migrations:
+-----Applying api_v2.0007_available_granule_granule_name... OK
+---New Datamodel for API Log
+----api_v2/migrations/0008_api_log.py
+-----Create model API_Log
+----Running migrations:
+-----Applying api_v2.0008_api_log... OK
+---Updated API Log to have server_result_state field
+----api_v2/migrations/0009_api_log_server_result_state.py
+-----Add field server_result_state to api_log
+----Running migrations:
+-----Applying api_v2.0009_api_log_server_result_state... OK
+
+
+
+# \ THE LINE OF WHAT IS ALREADY PUSHED TO COMMIT --- ALL ITEMS ABOVE ARE NOT PUSHED TO COMMIT  /
+# / THE LINE OF WHAT IS ALREADY PUSHED TO COMMIT --- ALL ITEMS BELOW ARE PUSHED TO COMMIT      \
+
+
+
+
+
+
+# Version 0.1.5.A
+-api_v2 Changes
+--Much Progress on emodis script port.
+--Updates to some of the ETL Datamodels, so that the new ETL_PipelineRun model can be connected to them.
+--New Data Models
+---ETL_PipelineRun - Simple way of tracking each individual pipeline run attempt, and connecting (tagging) that id to all the logs and Granule attempts (ETL Granules).
+---Available_Granule - Listing of every Granule that is available (used by the client side to determine data availability
+-Other Django Project or Module Changes (Settings etc)
+--New Enum values for the ETL Granule State Changes
+-System Changes
+--Migrations
+-
+---api_v2/migrations/0004_auto_20200726_1749.py
+----Add field etl_pipeline_run_uuid to etl_granule
+----Add field granule_pipeline_state to etl_granule
+----Add field etl_pipeline_run_uuid to etl_log
+---Running_Migration
+----Applying api_v2.0004_auto_20200726_1749... OK
+-
+---api_v2/migrations/0005_etl_pipelinerun.py
+----Create model ETL_PipelineRun
+---Running_Migration
+----Applying api_v2.0005_etl_pipelinerun... OK
+-
+---api_v2/migrations/0006_available_granule.py
+----Create model Available_Granule
+---Running_Migration
+----Applying api_v2.0006_available_granule... OK
+
+--Additional Context
+-ETL Overhaul
+    -Continued with emodis as the pipeline model
+        -Finished integrating emodis source script into the emodis version of the etl pipeline
+            -Solved a few issues around porting this (newer versions of dependencies, etc) - All integrated and no issues with it now.
+        -Completed and Tested the EMODIS ETL Pipeline Script
+    -Logging
+        -Added Individual Granule Level Logging
+        -Improved Existing Activity Logging
+        -Added Console Logging
+    -Datamodels
+        -New Datamodel (Available_Granule) for storing a single copy of any available granules per dataset (meant to be the way the clientside and api can know what data is available or not, and also know about missing granules)
+        -New Datamodel (ETL_PipelineRun) for storing each specific Pipeline Run as its own group (Makes things much easier for selecting subsets of logs - either for an Entire Run, or a specific Granule)
+    -Other minor edits to the code and docs.
+
+
+
+
+
+# Version 0.1.4.A
+-api_v2 Changes
+--ETL Pipeline
+---Much work on this - Broken up each step into logical units that can be sent to subtype specific logic.
+---Events and Error catching completed at the pipeline level.
+--Added manage command for list_etl_dataset_subtypes (Listing all the supported dataset subtypes)
+--Other minior code changes and typo fixes
+-Other Django Project or Module Changes (Settings etc)
+--ETL Subtypes added
+--ETL Pipeline Step names
+-System Changes
+--Migrations
+---python manage.py makemigrations api_v2
+----api_v2/migrations/0003_etl_dataset_dataset_subtype.py
+-----Add field dataset_subtype to etl_dataset
+---python manage.py migrate
+----Applying api_v2.0003_etl_dataset_dataset_subtype... OK
+
+
+
+
+# Version 0.1.3.A
+-api_v2 Changes
+--
+-Other Django Project or Module Changes (Settings etc)
+--Added manage command for add_new_etl_dataset
+--Added manage command for list_etl_dataset_uuids (Listing all the dataset UUIDs and Dataset Names)
+--Added manage command for start_etl_pipeline (Starting the actual ETL Pipeline)
+-System Changes
+--
+
+
+
+
+# Version 0.1.2.A
+-api_v2 Changes
+--Added Models for
+---ETL Log -- For Storing logs
+---ETL Dataset -- For Storing Information on specific ETL Datasets
+---ETL Granule -- For Storing the record of expected (ingested and/or missed) granules
+-Other Django Project or Module Changes (Settings etc)
+--Added Settings enum for Tracking each of the Log Activity Types
+--Migrations for api_v2:
+---api_v2/migrations/0002_auto_20200628_2315.py
+----Create model ETL_Dataset
+----Create model ETL_Granule
+----Create model ETL_Log
+----Alter field auth_id on user
+--Migrate
+---Applying api_v2.0002_auto_20200628_2315... OK
+-System Changes
+--
+
+
+
+# Version 0.1.1.A
+-api_v2 Changes
+--
+-Other Django Project or Module Changes (Settings etc)
+--
+-System Changes
+--
+
+
+
+# Version 0.1.0.A  // Have not setup proper versioning yet
+-api_v2 Changes
+--Added Data Model For User
+--Added Authorization and session code (mostly views_auth chanages)
+--Added hooks for catching ALL API requests (and api errors)
+-Other Django Project or Module Changes (Settings etc)
+--Make Migration
+---api_v2/migrations/0001_initial.py
+----Create model User
+--Migrate
+---Applying api_v2.0001_initial... OK
+
+-System Changes
+--
+
+
+
+
+
+# Version 0.1.0.20200619.A
+    First Migration
+        python manage.py migrate
+            Operations to perform:
+              Apply all migrations: admin, auth, contenttypes, sessions
+            Running migrations:
+              Applying contenttypes.0001_initial... OK
+              Applying auth.0001_initial... OK
+              Applying admin.0001_initial... OK
+              Applying admin.0002_logentry_remove_auto_add... OK
+              Applying admin.0003_logentry_add_action_flag_choices... OK
+              Applying contenttypes.0002_remove_content_type_name... OK
+              Applying auth.0002_alter_permission_name_max_length... OK
+              Applying auth.0003_alter_user_email_max_length... OK
+              Applying auth.0004_alter_user_username_opts... OK
+              Applying auth.0005_alter_user_last_login_null... OK
+              Applying auth.0006_require_contenttypes_0002... OK
+              Applying auth.0007_alter_validators_add_error_messages... OK
+              Applying auth.0008_alter_user_username_max_length... OK
+              Applying auth.0009_alter_user_last_name_max_length... OK
+              Applying auth.0010_alter_group_name_max_length... OK
+              Applying auth.0011_update_proxy_permissions... OK
+              Applying sessions.0001_initial... OK
+
+
+
+
+
+
+# \ THE LINE OF WHAT IS ALREADY PUSHED LIVE --- ALL ITEMS ABOVE ARE DEV  /
+# / THE LINE OF WHAT IS ALREADY PUSHED LIVE --- ALL ITEMS BELOW ARE LIVE \
+
+
+
+
+
+# END OF FILE
+
+# Helpers (For the Readme docs)
+
+# Creating Migrations for new datamodel changes
+# # python manage.py makemigrations api_v2
+
+# Running Migrations
+# # python manage.py migrate
+
+# Creating a super user
+# # python manage.py createsuperuser

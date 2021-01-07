@@ -1,0 +1,27 @@
+Directory Structure for the Server Environment
+
+
+/ 					# Server's Boot drive 500g, meant for climateserv install and python environments, etc
+/data/ 				# Server's Data Directory
+/mnt/climateserv 	# THREDDS data server network share.  When files are put here, they end up on THREDDS server
+
+/cserv2/python_environments/environments/ 		                                                    # Root location for Python environment for climateserv (use terminal command "source /cserv2/python_environments/environments/py36_climateserv_2_env/bin/activate" to activate the virtual environment)
+/cserv2/python_environments/environments/py36_climateserv_2_env/lib/python3.6/site-packages         # Path to site-packages directory for virtual python environment
+/cserv2/django_app/ 							# Root location of where the cserv python django app lives.
+/cserv2/django_app/ClimateSERV-2.0-Server/		    # Python Django Project Directory for ClimateSERV 2.0
+/cserv2/django_app/ClimateSERV-2.0-StaticFiles/     # Python Django Location for Static Files for the ClimateSERV 2.0 serverside App
+/cserv2/django_app/ClimateSERV-2.0-Server/climateserv_2_0_serverside/   # Directory containing the wsgi.py file (webserver uses this)
+
+/cserv2/db_backups/                             # Directory for weekly database backups
+/cserv2/cron_logs/                              # Directory where raw cron job log files are stored.
+
+/cserv2/frontend_admin/                     # NodeJS Admin Front End
+/cserv2/frontend_user/                      # NodeJS UserFront End
+
+
+
+// Production Settings based directories.
+/data/
+/data/etl/ 							// This is where ETL Scripts do a lot of temp reading and writing during the ETL Process.  If the harddrive gets too full, just wipe everything below this directory.
+/mnt/climateserv/ 					// Root Thredds Server network share.
+/mnt/climateserv/nasa-imerg-early	// Example of a destination for an etl script This is where the IMERG early product output ends up

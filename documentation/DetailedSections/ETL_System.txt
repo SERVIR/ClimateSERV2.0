@@ -1,0 +1,113 @@
+
+This is a document to help explain how the ETL System works in ClimateSERV 2.0
+(Under Construction)
+
+The Basics
+    The ETL Pipeline requires a "Dataset" object to exist in the database.
+    The Dataset Object has to be configured with a subtype - so the pipeline will know which ETL script to run.
+    Use python manage.py add_new_etl_dataset --etl_dataset_name <Unique_Dataset_Name> to create that new dataset object (essentially registering a human readable name to the dataset object)
+    Configure the details of this new object by finding it in the Django Admin section and editing the details.
+
+
+Pipeline Start
+	Pipeline Start function is exposed to the Linux Shell as a python manage.py command.
+	Some examples of the command for starting a pipeline run look like this:
+		python manage.py start_etl_pipeline --etl_dataset_uuid fRjduT9v4jHyazGBMEJe
+		python manage.py start_etl_pipeline --etl_dataset_uuid fRjduT9v4jHyazGBMEJe --START_YEAR_YYYY 2019
+	The Pattern
+		python manage.py start_etl_pipeline --etl_dataset_uuid <dataset_id> --Optional_Param OptionalParamValue
+	The start_etl_pipeline function validates existence of the dataset, sets all the parameters to the pipeline object and then starts the execution of an ETL Job
+
+Standardized Wrapper Functions with Specific Subtype Logic
+	The pipeline uses a series of standardized function wrappers in order to track all events and catch errors at any given step.
+	Each of these step functions in the pipeline must call a type specific function to actually do the work.
+	These specific functions return a standardized response which the pipeline can process into an event to be recorded (this includes error handling).
+
+	The list of functions and their brief descriptions that are used in this way are:
+		-Pre_ETL_Custom - Any specific script logic that needs to happen before any other steps
+		-Download 			- Calculate Expected files, download files from the external source (if they don't already exist locally). // is_overwrite_local_download Setting (Setting this to skips the step where we check for the previous existence of a file in the expected download location.  This is useful for correcting errored files that may have been fixed at their source.)
+		-Extract 			- Extract contents of local files into a temporary location in the file system
+		-Transform 			- Perform any modifications on extracted data / files
+		-Load 				- Move transformed data into it's final usable position (this could mean loading information into a database, or moving a file into another subdirectory) - The common use case at this time is to place each granule file into a directory that THREDDS is monitoring.
+		-Post_ETL_Custom 	- Any specific script logic that needs to happen after any other steps
+		-Clean_up 			- Remove any files // is_skip_cleanup Setting // Setting this to true will skip this step (so that any temporary files will remain on the file system.  This is useful for debugging)
+
+
+
+Supported Subtypes
+    Use the python manage command 'list_etl_dataset_subtypes' to see them all.
+        python manage.py list_etl_dataset_subtypes
+
+    At the time of this writing, the output from the above is:
+        ETL Dataset Subtypes: ['chrip', 'chrips', 'chrips_gefs', 'emodis', 'esi_4week', 'esi_12week', 'imerg_early', 'imerg_late']
+
+
+
+
+
+Logging
+    Activity Logs
+        High Level activity logs exist for each step of the pipeline.
+        When processing batches of granules, any errors are captured and passed up as ETL Activity Logs.
+        When there are no errors, there are periodic print statements (so when running on the server, the output can be seen)
+            Each of those print statement events are collated and captured, and sent up as part of the Activity Logs
+    Granules
+        When expected Granules are generated, a record for each one is created in the database (and their IDs are stored only during the specific run)
+        If a granule has an error, the step at which it occured is logged along with the error info.
+        When a granule is successfully processed, it's status is updated in the database (so this way, we can track the life of each granule in the following steps / states:
+            Attempted Granules      - A record existing in the database is an indication of this status (It means the pipeline run to process this particlar granule started.
+                Resolved states (Stored in the field: 'pipeline_granule_state')
+                    Successfully Processed Granules     - The Granule made it all the way to the NC4 file state and should be properly working
+                    Failed Granules                     - Something failed along the way with the Granule (There was an error of some kind - specific error details should be attached to the Granule's Database Record.
+        Only when a granule is actually
+
+
+
+
+How do I see a list of all available ETL Dataset UUID Values?
+    To see a list of ALL available ETL Dataset UUID values:
+        python manage.py list_etl_dataset_uuids
+
+
+How do I see all of the valid / supported Dataset Subtypes?
+    To see a list of ALL valid and supported Dataset subtypes:
+        python manage.py list_etl_dataset_subtypes
+
+
+Where do these custom commands live (in the code)?
+    ALL custom django-admin commands, including the ones related to ETL live in this directory
+        api_v2/management/commands
+    Reference
+        https://docs.djangoproject.com/en/3.0/howto/custom-management-commands/
+
+
+
+
+
+Rough Draft
+    -Data Model for capturing ETL Errors (These are errors during ingestion as described in the project requirements definitions)
+        -The Data Model has a static function for adding new errors to the actual object (blindly adds what gets passed in)
+
+    (IS THIS NEEDED?)
+        -Hook for being able to call this 'add error' function from the outside (python manage.py add_error with_optional_param1 with_optional_param2 with_optional_param3)
+
+
+    How do ETL Scripts function as of right now?
+        Looks like the climateserv 1.0 version did the following
+            Getting Data In
+                -A shell command was called with cron tabs
+                -That shell command would lead to calling a python file
+                -That python file would then execute type specific business logic
+                    -Usually:
+                        -pull in data from some source
+                        -Perform some kind of operation(s) on it
+                        -Keep track of some result data (JSON Capabilities type data)
+                        -Store it in the large HDF file(s)
+            Getting Data Out
+                -An API Request with some specific params would be sent in to retrieve data.
+                -Specific Data would be pulled out of the HDF and made into a TIFF??
+                -That file / data would be returned to the user.
+
+
+
+

@@ -1,0 +1,75 @@
+Deploy.txt
+
+
+
+    Environments Info
+        Server Environment
+            CentOS Linux release 8.2.2004 (Core)
+            (Fresh Server setup - Python is not yet installed)
+
+        Directories
+            / 					// Server's Boot drive 500g, meant for climateserv install and python environments, etc
+            /data/ 				// Server's Data Directory
+            /mnt/climateserv 	// Thredds data server network share.  When files are put here, they end up on THREDDS server
+
+            /cserv2/django_app/ 							// Root location of where the cserv python django app lives.
+            /cserv2/python_environments/environments/ 		// Root location for Python environment for climateserv
+
+
+
+    Initial Setup of Deploy Environment (steps that were taken)
+
+
+        Install Python3 and pip on CentOS 8 - Also installing a virtual env
+
+            (1) Update the System.  Make sure package manager is up to date
+            sudo dnf update -y
+                # No Issues
+
+            (2) Installing and Setting up Python 3
+            sudo dnf install python3 -y
+                # No Issues
+            python3 -V
+                # Python 3.6.8
+            pip3 -V
+                # pip 9.0.3 from /usr/lib/python3.6/site-packages (python 3.6)
+            sudo dnf -y groupinstall development  # Installing the CentOS Development Tools
+
+
+            (3) Setting up a Virtual Environment
+            mkdir /cserv2/python_environments/environments/
+            cd /cserv2/python_environments/environments/
+
+            # use chown on the directory so that you do not have to use sudo when setting up the environment
+
+            # Setup the environment
+            python3 -m venv py36_climateserv_2_env
+            cd py36_climateserv_2_env
+
+            # Activating the environment
+            source py36_climateserv_2_env/bin/activate 		# Activite the python environment
+
+
+            (4) Installing Django and all other dependencies in this environment.
+            pip3 install Django==3.0.7
+
+            # Upgrading Pip
+            pip3 install --upgrade pip
+
+            # Installing other dependencies
+            pip3 install pyzmq==19.0.2  			# For worker threads
+
+            # These are all involved in getting data from NetCDF files
+            pip3 install pandas==1.0.5
+            pip3 install xarray==0.16.0
+            pip3 install rasterio==1.1.5
+            pip3 install scipy==1.5.2
+
+                # For the client connections
+            pip3 install django-cors-headers==3.4.0
+
+
+
+    Tutorial References
+        https://www.digitalocean.com/community/tutorials/how-to-install-python-3-and-set-up-a-programming-environment-on-centos-8
+        https://www.linuxtechi.com/setup-django-python-framework-centos-8/

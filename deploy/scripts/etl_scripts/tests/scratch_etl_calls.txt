@@ -1,0 +1,9 @@
+
+# Examples of how to use the ETL Pipeline
+
+# Backfill Imerg Early Data from 2019_June_01 to 2020_Jan_01
+python3 manage.py start_etl_pipeline --etl_dataset_uuid WJzA2uQHJHhEwXHvTYiv --START_YEAR_YYYY 2019 --START_MONTH_MM 06  --START_DAY_DD 01 --START_30MININCREMENT_NN 01 --END_YEAR_YYYY 2020 --END_MONTH_MM 01  --END_DAY_DD 01 --END_30MININCREMENT_NN 01
+
+
+# Call an IMERG Early job for a small range (10 files)
+python3 manage.py start_etl_pipeline --etl_dataset_uuid WJzA2uQHJHhEwXHvTYiv --START_YEAR_YYYY 2020 --START_MONTH_MM 11  --START_DAY_DD 15 --START_30MININCREMENT_NN 01 --END_YEAR_YYYY 2020 --END_MONTH_MM 11  --END_DAY_DD 15 --END_30MININCREMENT_NN 11

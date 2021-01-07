@@ -1,0 +1,37 @@
+This is a doc that shows how to start the workers threads which are responsible for receiving and processing jobs in an Async way.
+
+This also explains some additional context and differences between ClimateSERV 1.0 and ClimateSERV 2.0.
+
+
+
+In ClimateSERV 1.0,
+    ZMQ was used for messages between the API Layer and the Job Processors (Worker Threads)
+    Berkely DB was used for job data and progress communication.
+
+In ClimateSERV 2.0,
+    The worker system has been completely rebuilt to use a local database for that same communication.
+        -This includes fully integrating the start/stop commands with python django 'manage.py' commands
+        -This also includes rewriting all the ZMQ and Berkely stuff to instead work with the newly created Task_Log
+        -This also includes a new Core Processing part that works with NetCDF instead of old HDF files that ClimateSERV 1 used.
+
+    Some information on how to interface with the new system
+
+        -The Start and Stop Worker commands are now integrated with python django.
+            To Start a new worker run terminal command:
+                python3 manage.py start_worker
+                There is a helper shell script setup for this called, workers_start_one.sh
+            To Stop a single worker run terminal command:
+                python3 manage.py stop_worker_by_uuid                   # Example with uuid param:      python manage.py stop_worker_by_uuid -uuid xJjKYymAt3zBQcphXViV
+            To Stop ALL workers run terminal command:
+                python3 manage.py stop_all_workers
+
+        -To make the workers run in the unix background, I've set up cron jobs that first stop all workers, then wait 5 minutes, then start up 3 separate workers, 1 minute apart.  This cron is configured to be called once per year
+            Depending on how the system performs under real usage, it would probably be better to cycle these workers more often, maybe once per week.
+            That can be achieved by configuring the crontab for this.
+
+
+        -Life Cycle of a Server Job
+            -Submit Data Request API Calls create new Jobs to process
+            -Workers run on an endless loop checking for new Jobs to process
+            -When Job processing is successfully completed, there should always be a .json file which contains operation calculation results.  For Download Data Requests, there will be an additional .zip file created.
+

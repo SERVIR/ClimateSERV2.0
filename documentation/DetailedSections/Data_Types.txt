@@ -1,0 +1,25 @@
+Data_Types.txt
+
+The old version of ClimateSERV used a concept called 'DataTypes'.
+In order to support end user legacy calls, this DataTypes concept has been integrated with the new Dataset IDs.
+This means that requests for data (calculations processing and/or data downloads) still require this DataType.
+
+Each of these data types have been mapped to the existing Datasets in the system.
+
+Efforts were made to keep these datatypes pointing at the same datasets that they previously used.
+
+Here is the list of current datatypes as of the time of this doc writing.
+
+
+    CSERV 2 Dataset name 				CSERV 1 Datatype 	Notes
+    chirp 								0
+    chirps 								211 				// New Chirps (with the 's' at the end of 'chrip') dataset?
+    chirpsgef 							32
+    esi_4wk 							221 				// New ESI Dataset (4wk)
+    esi_12wk 							33
+    ndvi_CentralAsia 	 				28
+    ndvi_SouthernAfrica 	 			5
+    ndvi_WestAfrica 					1
+    ndvi_EastAfrica 					2
+    imerg_Early 						201 				// New IMERG datasets (30 mins)
+    imerg_Late 							202 				// New IMERG datasets (30 mins)
