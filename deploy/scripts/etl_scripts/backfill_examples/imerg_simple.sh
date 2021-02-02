@@ -5,11 +5,11 @@
 cd /cserv2/django_app/ClimateSERV-2.0-Server
 #
 # IMERG EARLY
-DATASET_ID="WJzA2uQHJHhEwXHvTYiv"   # PROD
+#DATASET_ID="WJzA2uQHJHhEwXHvTYiv"   # PROD
 #DATASET_ID="aZ9wbLzbE7efN2NSSAXn"   # DEV
 #
 # IMERG LATE
-#DATASET_ID="ggmNzrqfavjRPgyU2N2W"   # PROD
+DATASET_ID="ggmNzrqfavjRPgyU2N2W"   # PROD
 #DATASET_ID="uGG9pqNfU4nk7FGZJpGj"   # DEV
 
 # Time Vars

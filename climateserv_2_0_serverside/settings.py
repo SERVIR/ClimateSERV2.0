@@ -49,11 +49,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '^x!qf^2q!v@ff0--p6j=)ykfvr%4e-p&c+zr3@i3ft8=3i#*to'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-#DEBUG = False
+#DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []      # ['climateserv2-beta-server.servirglobal.net', '10.5.5.68', '216.218.226.161', 'climateserv.servirglobal.net']     # ['*']
-#ALLOWED_HOSTS = ['climateserv.servirglobal.net', '216.218.226.161', '10.5.5.68']  # ['*']
+#ALLOWED_HOSTS = []      # ['climateserv2-beta-server.servirglobal.net', '10.5.5.68', '216.218.226.161', 'climateserv.servirglobal.net']     # ['*']
+ALLOWED_HOSTS = ['climateserv2-beta-server.servirglobal.net', 'climateserv.servirglobal.net', '216.218.226.161', '10.5.5.68', 'localhost', '127.0.0.1']  # ['*']
 
 
 

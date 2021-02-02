@@ -8,8 +8,8 @@ cd /cserv2/django_app/ClimateSERV-2.0-Server
 DATASET_UUID="WJzA2uQHJHhEwXHvTYiv"  # IMERG EARLY - PRODUCTION
 #DATASET_UUID="ggmNzrqfavjRPgyU2N2W"  # IMERG LATE - PRODUCTION
 
-DATASET_NAME="Imerg Early"  # WJzA2uQHJHhEwXHvTYiv
-#DATASET_NAME="Imerg Late"   # ggmNzrqfavjRPgyU2N2W
+#DATASET_NAME="Imerg Early"  # WJzA2uQHJHhEwXHvTYiv
+DATASET_NAME="Imerg Late"   # ggmNzrqfavjRPgyU2N2W
 
 echo ""
 echo "About to Run Backfill script for $DATASET_NAME"

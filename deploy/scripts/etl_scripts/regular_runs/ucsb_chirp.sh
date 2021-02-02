@@ -61,6 +61,6 @@ $COMMAND
 
 # Cron Setup
 # Weekly (1:30am on Mondays)
-# # 30 1 * * 1 /usr/bin/sh /cserv2/django_app/ClimateSERV-2.0-Server/deploy/scripts/etl_scripts/regular_runs/ucsb_chirp.sh >> /cserv2/cron_logs/$(date +\%Y_\%m_\%d_\%H\%M_\%S)etl__regular_runs__ucsb_chirp.log 2>&1
+# # 30 1 * * 1 /usr/bin/sh /cserv2/django_app/ClimateSERV-2.0-Server/deploy/scripts/etl_scripts/regular_runs/ucsb_chrip.sh >> /cserv2/cron_logs/$(date +\%Y_\%m_\%d_\%H\%M_\%S)etl__regular_runs__ucsb_chrip.log 2>&1
 
 

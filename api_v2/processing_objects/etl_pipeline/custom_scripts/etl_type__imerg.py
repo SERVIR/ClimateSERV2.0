@@ -945,7 +945,7 @@ class imerg():
 
                     # Based on the geotiffFile name, determine the time string elements.
                     # Split elements by period
-                    TimeStrSplit = tif_filename.split('.') #TimeStrSplit = geotiffFile.split('.')
+                    TimeStrSplit = tif_filename.split('.') #TimeStrSplit = geotiffFile.split('.') 
                     TimeStr = TimeStrSplit[4].split('-')
                     yyyymmdd = TimeStr[0]
                     hhmmss = TimeStr[1]
@@ -996,8 +996,8 @@ class imerg():
                     # missing_data/_FillValue , relative time units etc. are handled as part of the encoding dictionary used in to_netcdf() call.
                     # 'zlib' and 'complevel' are added to generate compression and reduce file size
                     precipEncoding = {'_FillValue': np.uint16(29999), 'missing_value': np.uint16(29999), 'dtype': np.dtype('uint16'), 'scale_factor': 0.1, 'add_offset': 0.0, 'zlib': True, 'complevel': 7}
-                    timeEncoding = {'units': 'seconds since 1970-01-01T00:00:00Z'}
-                    timeBoundsEncoding = {'units': 'seconds since 1970-01-01T00:00:00Z'}
+                    timeEncoding = {'units': 'seconds since 1970-01-01T00:00:00Z','dtype':np.dtype('int32')}
+                    timeBoundsEncoding = {'units': 'seconds since 1970-01-01T00:00:00Z','dtype':np.dtype('int32')}
                     # Set the Attributes
                     imerg.latitude.attrs = latAttr
                     imerg.longitude.attrs = lonAttr
