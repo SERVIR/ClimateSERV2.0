@@ -24,6 +24,7 @@ from api_v2.processing_objects.etl_pipeline.custom_scripts.etl_type__emodis impo
 from api_v2.processing_objects.etl_pipeline.custom_scripts.etl_type__imerg  import imerg    as Subtype__imerg
 from api_v2.processing_objects.etl_pipeline.custom_scripts.etl_type__esi    import esi      as Subtype__esi
 from api_v2.processing_objects.etl_pipeline.custom_scripts.etl_type__chirps import chirps   as Subtype__chirps
+from api_v2.processing_objects.etl_pipeline.custom_scripts.etl_type__imerg_1_day import ImergOneDay  as Subtype__ImergOneDay
 # TODO finish these scripts and import them here.
 
 
@@ -482,6 +483,25 @@ class ETL_Pipeline():
         if (current_Dataset_SubType == Config_Setting.get_value(setting_name="ETL_DATASET_SUBTYPE__IMERG_LATE", default_or_error_return_value="imerg_late")):   # settings.ETL_DATASET_SUBTYPE__IMERG_LATE):
             # Create an instance of the subtype class - this class must implement each of the pipeline functions for this to work properly.
             self.Subtype_ETL_Instance = Subtype__imerg(self)
+            # Imerg is special, requires setting which mode it is in
+            self.Subtype_ETL_Instance.set_imerg_mode__To__Late()
+            # Set IMERG Params
+            self.Subtype_ETL_Instance.set_imerg_params(YYYY__Year__Start=self.START_YEAR_YYYY, YYYY__Year__End=self.END_YEAR_YYYY, MM__Month__Start=self.START_MONTH_MM, MM__Month__End=self.END_MONTH_MM, DD__Day__Start=self.START_DAY_DD, DD__Day__End=self.END_DAY_DD, NN__30MinIncrement__Start=self.START_30MININCREMENT_NN, NN__30MinIncrement__End=self.END_30MININCREMENT_NN)
+
+        # IMERG _1_Day Early
+        if (current_Dataset_SubType == Config_Setting.get_value(setting_name="ETL_DATASET_SUBTYPE__IMERG_1_Day_EARLY", default_or_error_return_value="imerg_early")):   # settings.ETL_DATASET_SUBTYPE__IMERG_EARLY):
+            # Create an instance of the subtype class - this class must implement each of the pipeline functions for this to work properly.
+            self.Subtype_ETL_Instance = Subtype__ImergOneDay(self)
+            # Imerg is special, requires setting which mode it is in
+            self.Subtype_ETL_Instance.set_imerg_mode__To__Early()
+            # Set IMERG Params
+            self.Subtype_ETL_Instance.set_imerg_params(YYYY__Year__Start=self.START_YEAR_YYYY, YYYY__Year__End=self.END_YEAR_YYYY, MM__Month__Start=self.START_MONTH_MM, MM__Month__End=self.END_MONTH_MM, DD__Day__Start=self.START_DAY_DD, DD__Day__End=self.END_DAY_DD, NN__30MinIncrement__Start=self.START_30MININCREMENT_NN, NN__30MinIncrement__End=self.END_30MININCREMENT_NN)
+
+
+        # IMERG _1_Day Late
+        if (current_Dataset_SubType == Config_Setting.get_value(setting_name="ETL_DATASET_SUBTYPE__IMERG_1_Day_LATE", default_or_error_return_value="imerg_late")):   # settings.ETL_DATASET_SUBTYPE__IMERG_LATE):
+            # Create an instance of the subtype class - this class must implement each of the pipeline functions for this to work properly.
+            self.Subtype_ETL_Instance = Subtype__ImergOneDay(self)
             # Imerg is special, requires setting which mode it is in
             self.Subtype_ETL_Instance.set_imerg_mode__To__Late()
             # Set IMERG Params
