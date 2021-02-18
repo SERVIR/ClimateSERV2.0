@@ -7,6 +7,11 @@ The Basics
     The Dataset Object has to be configured with a subtype - so the pipeline will know which ETL script to run.
     Use python manage.py add_new_etl_dataset --etl_dataset_name <Unique_Dataset_Name> to create that new dataset object (essentially registering a human readable name to the dataset object)
     Configure the details of this new object by finding it in the Django Admin section and editing the details.
+    Here is the correct format:
+    sudo -i
+    cd /cserv2/django_app/ClimateSERV-2.0-Server
+    python3 manage.py add_new_etl_dataset the_unique_name_without_dashes_or_quotes
+
 
 
 Pipeline Start

@@ -1,5 +1,5 @@
-# ETL Datasets
-# // For keeping track of each ETL job (Each unique ETL Job has it's own entry in this table.  Each Unique pipeline run (unique set of logic to pull in external data) has an entry here)
+# ETL Datasets // For keeping track of each ETL job (Each unique ETL Job has it's own entry in this table.  Each
+# Unique pipeline run (unique set of logic to pull in external data) has an entry here)
 
 from django.db import models
 from common_utils import utils as common_utils
