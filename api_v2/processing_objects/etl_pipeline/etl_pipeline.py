@@ -505,7 +505,13 @@ class ETL_Pipeline():
             # Imerg is special, requires setting which mode it is in
             self.Subtype_ETL_Instance.set_imerg_mode("LATE")
             # Set IMERG Params
-            self.Subtype_ETL_Instance.set_imerg_1day_params(YYYY__Year__Start=self.START_YEAR_YYYY, YYYY__Year__End=self.END_YEAR_YYYY, MM__Month__Start=self.START_MONTH_MM, MM__Month__End=self.END_MONTH_MM, DD__Day__Start=self.START_DAY_DD, DD__Day__End=self.END_DAY_DD)
+            self.Subtype_ETL_Instance.set_imerg_1day_params(
+                start_year=self.START_YEAR_YYYY,
+                end_year=self.END_YEAR_YYYY,
+                start_month=self.START_MONTH_MM,
+                end_month=self.END_MONTH_MM,
+                start_day=self.START_DAY_DD,
+                end_day=self.END_DAY_DD)
 
 
 

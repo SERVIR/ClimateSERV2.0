@@ -14,8 +14,8 @@ The Basics
 
     Also for any of this to work you need to login to the admin section and add the new sub_type to config_setting
 
-    It also looks like after that you need to add it to the modle code (model_ETL_Dataset.py) get_all_subtypes_as_string_array()
-    else it won't actually find it because it's not looking for it, Confirming and will update after
+    You also need to add it to the modle code (model_ETL_Dataset.py) get_all_subtypes_as_string_array()
+    else it won't actually find it because it's not looking for it.
 
 
 
