@@ -119,11 +119,11 @@ class ImergOneDay:
         subtype_filter = str(subtype_filter).strip()
         if str(subtype_filter).strip() == 'EARLY':
             return Config_Setting.get_value(
-                setting_name="PATH__TEMP_WORKING_DIR__IMERG__EARLY",
+                setting_name="PATH__TEMP_WORKING_DIR__IMERG__EARLY_1DAY",
                 default_or_error_return_value="")
         else:
             return Config_Setting.get_value(
-                setting_name="PATH__TEMP_WORKING_DIR__IMERG__LATE",
+                setting_name="PATH__TEMP_WORKING_DIR__IMERG__LATE_1DAY",
                 default_or_error_return_value="")
 
     # Get the local filesystem place to store the final NC4 files (The THREDDS monitored Directory location)
@@ -131,11 +131,11 @@ class ImergOneDay:
     def get_final_load_dir(subtype_filter):
         if str(subtype_filter).strip() == 'EARLY':
             return Config_Setting.get_value(
-                setting_name="PATH__THREDDS_MONITORING_DIR__IMERG__EARLY",
+                setting_name="PATH__THREDDS_MONITORING_DIR__IMERG__EARLY_1DAY",
                 default_or_error_return_value="")
         else:
             return Config_Setting.get_value(
-                setting_name="PATH__THREDDS_MONITORING_DIR__IMERG__LATE",
+                setting_name="PATH__THREDDS_MONITORING_DIR__IMERG__LATE_1DAY",
                 default_or_error_return_value="")
 
     # Get the Remote Locations for each of the subtypes
