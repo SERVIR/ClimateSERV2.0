@@ -493,7 +493,7 @@ class ETL_Pipeline():
             # Create an instance of the subtype class - this class must implement each of the pipeline functions for this to work properly.
             self.Subtype_ETL_Instance = Subtype__ImergOneDay(self)
             # Imerg is special, requires setting which mode it is in
-            self.Subtype_ETL_Instance.set_imerg_mode("Early")
+            self.Subtype_ETL_Instance.set_imerg_mode("EARLY")
             # Set IMERG Params
             self.Subtype_ETL_Instance.set_imerg_1day_params(
                 start_year=self.START_YEAR_YYYY,
