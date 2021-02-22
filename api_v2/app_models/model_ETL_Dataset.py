@@ -228,6 +228,11 @@ class ETL_Dataset(models.Model):
             retArray.append(Config_Setting.get_value(setting_name="ETL_DATASET_SUBTYPE__IMERG_1_Day_LATE", default_or_error_return_value=""))
         except:
             pass
+        try:
+            #retArray.append(settings.ETL_DATASET_SUBTYPE__IMERG_LATE)
+            retArray.append(Config_Setting.get_value(setting_name="ETL_DATASET_SUBTYPE__IMERG_1_Day_EARLY", default_or_error_return_value=""))
+        except:
+            pass
         return retArray
 
     # Helper function for checking if an input string is one of the valid subtypes.

@@ -488,14 +488,14 @@ class ETL_Pipeline():
             # Set IMERG Params
             self.Subtype_ETL_Instance.set_imerg_params(YYYY__Year__Start=self.START_YEAR_YYYY, YYYY__Year__End=self.END_YEAR_YYYY, MM__Month__Start=self.START_MONTH_MM, MM__Month__End=self.END_MONTH_MM, DD__Day__Start=self.START_DAY_DD, DD__Day__End=self.END_DAY_DD, NN__30MinIncrement__Start=self.START_30MININCREMENT_NN, NN__30MinIncrement__End=self.END_30MININCREMENT_NN)
 
-        # # IMERG _1_Day Early
-        # if (current_Dataset_SubType == Config_Setting.get_value(setting_name="ETL_DATASET_SUBTYPE__IMERG_1_Day_EARLY", default_or_error_return_value="imerg_1_day_early")):   # settings.ETL_DATASET_SUBTYPE__IMERG_EARLY):
-        #     # Create an instance of the subtype class - this class must implement each of the pipeline functions for this to work properly.
-        #     self.Subtype_ETL_Instance = Subtype__ImergOneDay(self)
-        #     # Imerg is special, requires setting which mode it is in
-        #     self.Subtype_ETL_Instance.set_imerg_mode("Early")
-        #     # Set IMERG Params
-        #     self.Subtype_ETL_Instance.set_imerg_params(YYYY__Year__Start=self.START_YEAR_YYYY, YYYY__Year__End=self.END_YEAR_YYYY, MM__Month__Start=self.START_MONTH_MM, MM__Month__End=self.END_MONTH_MM, DD__Day__Start=self.START_DAY_DD, DD__Day__End=self.END_DAY_DD, NN__30MinIncrement__Start=self.START_30MININCREMENT_NN, NN__30MinIncrement__End=self.END_30MININCREMENT_NN)
+        # IMERG _1_Day Early
+        if (current_Dataset_SubType == Config_Setting.get_value(setting_name="ETL_DATASET_SUBTYPE__IMERG_1_Day_EARLY", default_or_error_return_value="imerg_1_day_early")):   # settings.ETL_DATASET_SUBTYPE__IMERG_EARLY):
+            # Create an instance of the subtype class - this class must implement each of the pipeline functions for this to work properly.
+            self.Subtype_ETL_Instance = Subtype__ImergOneDay(self)
+            # Imerg is special, requires setting which mode it is in
+            self.Subtype_ETL_Instance.set_imerg_mode("Early")
+            # Set IMERG Params
+            self.Subtype_ETL_Instance.set_imerg_params(YYYY__Year__Start=self.START_YEAR_YYYY, YYYY__Year__End=self.END_YEAR_YYYY, MM__Month__Start=self.START_MONTH_MM, MM__Month__End=self.END_MONTH_MM, DD__Day__Start=self.START_DAY_DD, DD__Day__End=self.END_DAY_DD, NN__30MinIncrement__Start=self.START_30MININCREMENT_NN, NN__30MinIncrement__End=self.END_30MININCREMENT_NN)
 
 
         # IMERG _1_Day Late

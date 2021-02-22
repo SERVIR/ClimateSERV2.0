@@ -17,6 +17,11 @@ The Basics
     You also need to add it to the modle code (model_ETL_Dataset.py) get_all_subtypes_as_string_array()
     else it won't actually find it because it's not looking for it.
 
+    Must create unique settings and directories for:
+        PATH__THREDDS_MONITORING_DIR__DATASETNAME
+        PATH__TEMP_WORKING_DIR__DATASETNAME
+
+
 
 
 Pipeline Start
