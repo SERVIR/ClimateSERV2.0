@@ -1,4 +1,4 @@
-django==3.0.12
+django==3.0.14
 django-cors-headers==3.4.0
 pandas==1.0.5
 numpy==1.19.1
